@@ -39,6 +39,36 @@ const createFruit = async (req, res) => {
       });
     }
 
+    // Find the corresponding warehouse by warehouseNumber
+    const warehouse = await WareHouse.findOne({ warehouseID: warehouseNumber });
+    if (!warehouse) {
+      return res.status(404).json({
+        error: "Warehouse not found",
+      });
+    }
+
+    // Check if there's enough available capacity in the warehouse
+    if (warehouse.warehouseAvailableCapacity < quantity) {
+      return res.status(400).json({
+        error: "Not enough available capacity in the warehouse",
+      });
+    }
+
+    // Update the warehouse capacities and batch number
+    // Update the warehouse capacities and batch number
+    warehouse.warehouseCurrentCapacity =
+      Number(warehouse.warehouseCurrentCapacity) + Number(quantity);
+    warehouse.warehouseAvailableCapacity =
+      Number(warehouse.warehouseAvailableCapacity) - Number(quantity);
+
+    // Update the warehouse's current batch numbers if batchNumber is not already included
+    if (!warehouse.warehouseCurrentBatchNo.includes(batchNumber)) {
+      warehouse.warehouseCurrentBatchNo.push(batchNumber);
+    }
+
+    // Save the updated warehouse
+    await warehouse.save();
+
     // Create a new fruit record
     const newFruit = await Fruit.create({
       fruitName,

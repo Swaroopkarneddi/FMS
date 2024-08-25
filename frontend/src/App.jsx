@@ -9,7 +9,7 @@ function App() {
     <>
       <div>
         {/* <SalesAnalysis /> */}
-        {/* <AddFruits /> */}
+        <AddFruits />
       </div>
     </>
   );
