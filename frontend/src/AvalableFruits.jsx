@@ -5,22 +5,43 @@ import axios from "axios";
 
 function AvalableFruits() {
   const [fruits, setFruits] = useState([]);
+  const [isDataUpdated, setIsDataUpdated] = useState(false);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/getAllFruits")
-      .then((response) => {
+    const fetchFruits = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/getAllFruits");
         setFruits(response.data);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("There was an error fetching the fruits data!", error);
-      });
-  }, []);
+      }
+    };
+
+    fetchFruits();
+  }, [isDataUpdated]);
+
+  const handleDelete = async (batchNumber) => {
+    try {
+      await axios.delete(`http://localhost:8000/deleteFruit/${batchNumber}`);
+      setIsDataUpdated((prev) => !prev);
+      console.log(`Delete button clicked for batchNumber ${batchNumber}`);
+
+      // setIsDataUpdated((prev) => !prev);
+    } catch (error) {
+      console.error("There was an error deleting the fruit!", error);
+    }
+  };
 
   return (
     <div className="avalablefruits">
       {fruits.length > 0 ? (
-        fruits.map((fruit, index) => <FruitCard key={index} fruit={fruit} />)
+        fruits.map((fruit) => (
+          <FruitCard
+            key={fruit.batchNumber}
+            fruit={fruit}
+            onDelete={handleDelete}
+          />
+        ))
       ) : (
         <p>No fruits available</p>
       )}

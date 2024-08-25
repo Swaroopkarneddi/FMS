@@ -1,7 +1,8 @@
 import React from "react";
+import axios from "axios";
 import "./FruitCard.css";
 
-const FruitCard = ({ fruit }) => {
+const FruitCard = ({ fruit, onDelete }) => {
   const {
     fruitName,
     batchNumber,
@@ -16,9 +17,15 @@ const FruitCard = ({ fruit }) => {
     warehouseNumber,
   } = fruit;
 
-  const handleDelete = () => {
-    console.log(`Delete button clicked for ${fruitName}`);
-    // You can add actual delete logic here or simulate the deletion
+  const handleDelete = async () => {
+    try {
+      await axios.delete(`http://localhost:8000/deleteFruit/${batchNumber}`);
+      console.log(`Delete button clicked for ${fruitName}`);
+
+      if (onDelete) onDelete(batchNumber);
+    } catch (error) {
+      console.error("There was an error deleting the fruit!", error);
+    }
   };
 
   return (
