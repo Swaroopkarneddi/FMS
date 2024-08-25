@@ -1,0 +1,37 @@
+.add-fruits {
+    width: 300px;
+    margin: 0 auto;
+}
+
+.add-fruits h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.add-fruits form {
+    display: flex;
+    flex-direction: column;
+}
+
+.add-fruits label {
+    margin-bottom: 10px;
+}
+
+.add-fruits input,
+.add-fruits select {
+    padding: 5px;
+    margin-top: 5px;
+}
+
+.add-fruits button {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.add-fruits button:hover {
+    background-color: #45a049;
+}

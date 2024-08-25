@@ -1,0 +1,18 @@
+.salesanalys {
+    display: flex;
+    /* flex-direction: column; */
+    flex-wrap: wrap;
+    /* padding: 10rem; */
+}
+
+
+
+.bgraph2 {
+    /* width: 50%; */
+    width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+}
