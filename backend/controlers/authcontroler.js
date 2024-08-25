@@ -138,8 +138,24 @@ const createWarehouse = async (req, res) => {
   }
 };
 
+const getAllWarehouses = async (req, res) => {
+  try {
+    // Fetch all warehouse records
+    const warehouses = await WareHouse.find();
+
+    // Return the list of all warehouses
+    return res.status(200).json(warehouses);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while retrieving warehouse records",
+    });
+  }
+};
+
 module.exports = {
   test,
   createFruit,
   createWarehouse,
+  getAllWarehouses,
 };

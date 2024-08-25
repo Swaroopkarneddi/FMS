@@ -1,26 +1,66 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import "./css/SalesAnalysis.css";
 import BarGraph from "./components/BarGraph";
 import LineGraph from "./components/LineGraph";
-import PieChart from "./components/PieChart";
-
-// import { Line, Bar, Pie } from "react-chartjs-2";
+// import PieChart from "./components/PieChart";
 
 function SalesAnalysis() {
+  const [wareHouseData, setWareHouseData] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:8000/getAllWarehouses"
+        );
+        const data = response.data;
+
+        // Assuming data is an array of warehouse objects with a capacity property
+        const labels = data.map(
+          (warehouse) => `Warehouse ${warehouse.warehouseID}`
+        );
+        const capacities = data.map(
+          (warehouse) => warehouse.warehouseAvailableCapacity
+        );
+
+        setWareHouseData({
+          labels: labels,
+          datasets: [
+            {
+              label: "Current warehouse capacity in KG",
+              data: capacities,
+              backgroundColor: ["blue"],
+              borderColor: "black",
+              borderWidth: 1,
+            },
+          ],
+        });
+      } catch (error) {
+        console.error("Error fetching warehouse data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const Fruitbardata = {
     labels: [
       "Apple",
       "Mango",
       "Banana",
       "Kiwi",
-      "pineAllpe",
+      "Pineapple",
       "Orange",
-      "grapes",
-      "guava",
+      "Grapes",
+      "Guava",
     ],
     datasets: [
       {
-        label: " curent fruits quantity in KG",
+        label: "Current fruits quantity in KG",
         data: [100, 300, 400, 100, 600, 700, 200, 400],
         backgroundColor: [
           "red",
@@ -38,39 +78,24 @@ function SalesAnalysis() {
     ],
   };
 
-  const WareHousebardata = {
-    labels: ["Warehouse 1", "Warehouse 2", "Warehouse 3", "Warehouse 4"],
-    datasets: [
-      {
-        label: " curent warehouse capacity in KG",
-        data: [100, 300, 400, 100],
-        backgroundColor: ["blue"],
-        borderColor: "black",
-        borderWidth: 1,
-      },
-    ],
-  };
-
-  //line data
-
   const SalesLinedata = {
     labels: [
-      "monday",
-      "tuesday",
-      "wednesday",
-      "thursday",
-      "friday",
-      "saturday",
-      "sunday",
+      "Monday",
+      "Tuesday",
+      "Wednesday",
+      "Thursday",
+      "Friday",
+      "Saturday",
+      "Sunday",
     ],
     datasets: [
       {
-        label: "imports in past week",
+        label: "Imports in past week",
         data: [300, 450, 400, 500, 100, 200, 800],
         borderColor: "red",
       },
       {
-        label: "exports in past week",
+        label: "Exports in past week",
         data: [200, 480, 600, 200, 200, 300, 900],
         borderColor: "green",
       },
@@ -84,9 +109,8 @@ function SalesAnalysis() {
       </div>
       <br />
       <div className="bgraph2">
-        <BarGraph data={WareHousebardata} />
+        <BarGraph data={wareHouseData} />
       </div>
-
       <div className="bgraph2">
         <LineGraph data={SalesLinedata} />
       </div>

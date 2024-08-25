@@ -6,6 +6,7 @@ const {
   test,
   createFruit,
   createWarehouse,
+  getAllWarehouses,
 } = require("../controlers/authcontroler");
 
 router.use(
@@ -18,5 +19,6 @@ router.use(
 router.get("/", test);
 router.post("/add-fruit", createFruit);
 router.post("/createWarehouse", createWarehouse);
+router.get("/getAllWarehouses", getAllWarehouses);
 
 module.exports = router;
