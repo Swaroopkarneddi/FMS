@@ -1,0 +1,4 @@
+.avalablefruits {
+    display: flex;
+    flex-wrap: wrap;
+}

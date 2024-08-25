@@ -153,6 +153,45 @@ const getAllWarehouses = async (req, res) => {
   }
 };
 
+const getAllFruits = async (req, res) => {
+  try {
+    // Fetch all fruit records
+    const fruits = await Fruit.find();
+
+    // Return the list of all fruits with their quantities
+    return res.status(200).json(fruits);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while retrieving fruit records",
+    });
+  }
+};
+
+const deleteFruit = async (req, res) => {
+  try {
+    const { batchNumber } = req.params;
+
+    // Find and delete the fruit by batchNumber
+    const result = await Fruit.deleteOne({ batchNumber });
+
+    if (result.deletedCount === 0) {
+      return res.status(404).json({
+        message: "Fruit not found",
+      });
+    }
+
+    return res.status(200).json({
+      message: "Fruit deleted successfully",
+    });
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while deleting the fruit record",
+    });
+  }
+};
+
 const getAggregatedFruitQuantities = async (req, res) => {
   try {
     // Aggregate fruits by summing quantities for each fruit name
@@ -188,4 +227,6 @@ module.exports = {
   createWarehouse,
   getAllWarehouses,
   getAggregatedFruitQuantities,
+  getAllFruits,
+  deleteFruit,
 };
