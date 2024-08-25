@@ -8,8 +8,8 @@ function App() {
   return (
     <>
       <div>
+        <AddFruits />
         <SalesAnalysis />
-        {/* <AddFruits /> */}
       </div>
     </>
   );

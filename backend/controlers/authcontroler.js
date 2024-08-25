@@ -153,9 +153,39 @@ const getAllWarehouses = async (req, res) => {
   }
 };
 
+const getAggregatedFruitQuantities = async (req, res) => {
+  try {
+    // Aggregate fruits by summing quantities for each fruit name
+    const aggregatedFruits = await Fruit.aggregate([
+      {
+        $group: {
+          _id: "$fruitName",
+          totalQuantity: { $sum: "$quantity" },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          fruitName: "$_id",
+          totalQuantity: 1,
+        },
+      },
+    ]);
+
+    // Return the aggregated fruits data
+    return res.status(200).json(aggregatedFruits);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while retrieving aggregated fruit data",
+    });
+  }
+};
+
 module.exports = {
   test,
   createFruit,
   createWarehouse,
   getAllWarehouses,
+  getAggregatedFruitQuantities,
 };

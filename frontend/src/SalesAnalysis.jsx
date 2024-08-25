@@ -11,71 +11,80 @@ function SalesAnalysis() {
     datasets: [],
   });
 
+  const [fruitData, setFruitData] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+  const fetchData = async () => {
+    try {
+      // Fetch warehouse data
+      const warehouseResponse = await axios.get(
+        "http://localhost:8000/getAllWarehouses"
+      );
+      const warehouseData = warehouseResponse.data;
+
+      const warehouseLabels = warehouseData.map(
+        (warehouse) => `Warehouse ${warehouse.warehouseID}`
+      );
+      const warehouseCapacities = warehouseData.map(
+        (warehouse) => warehouse.warehouseAvailableCapacity
+      );
+
+      setWareHouseData({
+        labels: warehouseLabels,
+        datasets: [
+          {
+            label: "Current warehouse capacity in KG",
+            data: warehouseCapacities,
+            backgroundColor: ["blue"],
+            borderColor: "black",
+            borderWidth: 1,
+          },
+        ],
+      });
+
+      // Fetch fruit data
+      const fruitResponse = await axios.get(
+        "http://localhost:8000/getAggregatedFruitQuantities"
+      );
+      const fruitData = fruitResponse.data;
+
+      const fruitLabels = fruitData.map((fruit) => fruit.fruitName);
+      const fruitQuantities = fruitData.map((fruit) => fruit.totalQuantity);
+
+      setFruitData({
+        labels: fruitLabels,
+        datasets: [
+          {
+            label: "Current fruits quantity in KG",
+            data: fruitQuantities,
+            backgroundColor: [
+              "red",
+              "yellow",
+              "#FFFFED",
+              "green",
+              "#FFE704",
+              "#FF9304",
+              "#3FFF04",
+              "#9FFF66",
+            ],
+            borderColor: "black",
+            borderWidth: 1,
+          },
+        ],
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:8000/getAllWarehouses"
-        );
-        const data = response.data;
-
-        // Assuming data is an array of warehouse objects with a capacity property
-        const labels = data.map(
-          (warehouse) => `Warehouse ${warehouse.warehouseID}`
-        );
-        const capacities = data.map(
-          (warehouse) => warehouse.warehouseAvailableCapacity
-        );
-
-        setWareHouseData({
-          labels: labels,
-          datasets: [
-            {
-              label: "Current warehouse capacity in KG",
-              data: capacities,
-              backgroundColor: ["blue"],
-              borderColor: "black",
-              borderWidth: 1,
-            },
-          ],
-        });
-      } catch (error) {
-        console.error("Error fetching warehouse data:", error);
-      }
-    };
-
     fetchData();
   }, []);
 
-  const Fruitbardata = {
-    labels: [
-      "Apple",
-      "Mango",
-      "Banana",
-      "Kiwi",
-      "Pineapple",
-      "Orange",
-      "Grapes",
-      "Guava",
-    ],
-    datasets: [
-      {
-        label: "Current fruits quantity in KG",
-        data: [100, 300, 400, 100, 600, 700, 200, 400],
-        backgroundColor: [
-          "red",
-          "yellow",
-          "#FFFFED",
-          "green",
-          "#FFE704",
-          "#FF9304",
-          "#3FFF04",
-          "#9FFF66",
-        ],
-        borderColor: "black",
-        borderWidth: 1,
-      },
-    ],
+  const handleRefresh = () => {
+    fetchData();
   };
 
   const SalesLinedata = {
@@ -104,8 +113,11 @@ function SalesAnalysis() {
 
   return (
     <div className="salesanalys">
+      <button onClick={handleRefresh} className="refresh-button">
+        Refresh Data
+      </button>
       <div className="bgraph2">
-        <BarGraph data={Fruitbardata} />
+        <BarGraph data={fruitData} />
       </div>
       <br />
       <div className="bgraph2">

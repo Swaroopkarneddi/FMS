@@ -24,7 +24,17 @@ ChartJS.register(
 function BarGraph({ data }) {
   return (
     <div>
-      <Bar data={data} />
+      <Bar
+        data={data}
+        // options={{
+        //   scales: {
+        //     yAxis: {
+        //       // min: 0,
+        //       max: 30000,
+        //     },
+        //   },
+        // }}
+      />
     </div>
   );
 }
