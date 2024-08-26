@@ -23,10 +23,8 @@ function AvalableFruits() {
   const handleDelete = async (batchNumber) => {
     try {
       await axios.delete(`http://localhost:8000/deleteFruit/${batchNumber}`);
-      setIsDataUpdated((prev) => !prev);
-      console.log(`Delete button clicked for batchNumber ${batchNumber}`);
-
-      // setIsDataUpdated((prev) => !prev);
+      setIsDataUpdated((prev) => !prev); // Toggle to trigger useEffect
+      console.log(`Deleted fruit with batchNumber ${batchNumber}`);
     } catch (error) {
       console.error("There was an error deleting the fruit!", error);
     }
