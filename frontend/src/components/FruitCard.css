@@ -5,6 +5,7 @@
     margin: 16px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: #fff;
+    width: fit-content;
 }
 
 .fruit-card h2 {

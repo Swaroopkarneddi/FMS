@@ -10,6 +10,7 @@ const {
   getAggregatedFruitQuantities,
   getAllFruits,
   deleteFruit,
+  getAllSales,
 } = require("../controlers/authcontroler");
 
 router.use(
@@ -26,5 +27,6 @@ router.get("/getAllWarehouses", getAllWarehouses);
 router.get("/getAggregatedFruitQuantities", getAggregatedFruitQuantities);
 router.get("/getAllFruits", getAllFruits);
 router.delete("/deleteFruit/:batchNumber", deleteFruit);
+router.get("/getAllSales", getAllSales);
 
 module.exports = router;

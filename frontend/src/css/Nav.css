@@ -1,0 +1,104 @@
+/* General Styles */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #2c3e50;
+    padding: 10px 20px;
+    font-family: Arial, sans-serif;
+    position: relative;
+}
+
+.navbar-logo {
+    font-size: 24px;
+    font-weight: bold;
+    color: #ecf0f1;
+}
+
+.avalablesales {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Navbar Links */
+.navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    transition: max-height 0.5s ease;
+    overflow: hidden;
+}
+
+.navbar-links li {
+    display: inline;
+}
+
+.navbar-links a {
+    color: #ecf0f1;
+    text-decoration: none;
+    font-size: 18px;
+    transition: color 0.3s ease;
+}
+
+.navbar-links a:hover,
+.active-link {
+    color: #e74c3c;
+}
+
+/* Toggle Button */
+.navbar-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.navbar-toggle span {
+    width: 25px;
+    height: 3px;
+    background-color: #ecf0f1;
+    margin: 3px 0;
+    transition: transform 0.4s ease, background-color 0.3s ease;
+}
+
+.navbar-toggle.open span:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+}
+
+.navbar-toggle.open span:nth-child(2) {
+    opacity: 0;
+}
+
+.navbar-toggle.open span:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+}
+
+/* .navbar-toggle.open span:nth-child(4) {
+    transform: translateY(-6px) rotate(-45deg);
+} */
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .navbar-toggle {
+        display: flex;
+    }
+
+    .navbar-links {
+        flex-direction: column;
+        position: absolute;
+        top: 30px;
+        right: 0;
+        background-color: #2c3e50;
+        max-height: 0;
+        width: 100%;
+    }
+
+    .navbar-links.open {
+        max-height: 300px;
+        /* Adjust as needed */
+    }
+
+    .navbar-links li {
+        text-align: center;
+        padding: 10px 0;
+    }
+}

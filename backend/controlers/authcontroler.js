@@ -1,5 +1,6 @@
 const Fruit = require("../Models/Fruit");
 const WareHouse = require("../Models/WareHouse");
+const Sales = require("../Models/Sales");
 const test = (req, res) => {
   res.send("test is working");
 };
@@ -172,22 +173,86 @@ const deleteFruit = async (req, res) => {
   try {
     const { batchNumber } = req.params;
 
-    // Find and delete the fruit by batchNumber
-    const result = await Fruit.deleteOne({ batchNumber });
-
-    if (result.deletedCount === 0) {
-      return res.status(404).json({
-        message: "Fruit not found",
+    // Validate required parameter
+    if (!batchNumber) {
+      return res.status(400).json({
+        error: "Batch number is required",
       });
     }
 
+    // Find the fruit by batchNumber
+    const fruit = await Fruit.findOne({ batchNumber });
+    if (!fruit) {
+      return res.status(404).json({
+        error: "Fruit not found",
+      });
+    }
+
+    const {
+      fruitName,
+      type,
+      areaTo,
+      areaFrom,
+      quantity,
+      arrivalDate,
+      departureDate,
+      MRP,
+      price,
+      warehouseNumber,
+    } = fruit;
+
+    // Find the corresponding warehouse by warehouseNumber
+    const warehouse = await WareHouse.findOne({ warehouseID: warehouseNumber });
+    if (!warehouse) {
+      return res.status(404).json({
+        error: "Warehouse not found",
+      });
+    }
+
+    // Update the warehouse capacities and batch number
+    warehouse.warehouseCurrentCapacity =
+      Number(warehouse.warehouseCurrentCapacity) - Number(quantity);
+    warehouse.warehouseAvailableCapacity =
+      Number(warehouse.warehouseAvailableCapacity) + Number(quantity);
+
+    // Remove the batchNumber from the warehouse's current batch numbers
+    warehouse.warehouseCurrentBatchNo =
+      warehouse.warehouseCurrentBatchNo.filter(
+        (batch) => batch !== batchNumber
+      );
+
+    // Save the updated warehouse
+    await warehouse.save();
+
+    // Create a new Sales record
+    const newSale = await Sales.create({
+      SoldfruitName: fruitName,
+      SoldbatchNumber: batchNumber,
+      type,
+      areaTo,
+      areaFrom,
+      quantity,
+      arrivalDate,
+      departureDate,
+      MRP,
+      price,
+      warehouseNumber,
+    });
+
+    // Delete the fruit record
+    await Fruit.deleteOne({ batchNumber });
+
+    // Return success message
     return res.status(200).json({
-      message: "Fruit deleted successfully",
+      message:
+        "Fruit deleted, warehouse updated, and sale recorded successfully",
+      sale: newSale,
     });
   } catch (error) {
     console.error(error);
     return res.status(500).json({
-      error: "An error occurred while deleting the fruit record",
+      error:
+        "An error occurred while deleting the fruit record, updating the warehouse, and recording the sale",
     });
   }
 };
@@ -221,6 +286,19 @@ const getAggregatedFruitQuantities = async (req, res) => {
   }
 };
 
+const getAllSales = async (req, res) => {
+  try {
+    const sales = await Sales.find().sort({ createdAt: -1 });
+
+    return res.status(200).json(sales);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while retrieving sales records",
+    });
+  }
+};
+
 module.exports = {
   test,
   createFruit,
@@ -229,4 +307,5 @@ module.exports = {
   getAggregatedFruitQuantities,
   getAllFruits,
   deleteFruit,
+  getAllSales,
 };
