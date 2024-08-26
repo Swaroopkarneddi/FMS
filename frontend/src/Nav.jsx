@@ -24,7 +24,7 @@ function Nav() {
       <ul className={`navbar-links ${isOpen ? "open" : ""}`}>
         <li>
           <Link
-            to="/"
+            to="/AddFruits"
             className={location.pathname === "/" ? "active-link" : ""}
             onClick={toggleMenu}
           >

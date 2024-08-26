@@ -6,6 +6,9 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     width: fit-content;
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
 }
 
 .fruit-card h2 {
@@ -22,14 +25,16 @@
 }
 
 .delete-button {
-    background-color: #e74c3c;
+    background-color: #3ce73c;
     color: white;
     border: none;
     padding: 8px 16px;
+    font-size: 1.2rem;
     cursor: pointer;
     border-radius: 4px;
+    margin-left: auto;
 }
 
 .delete-button:hover {
-    background-color: #c0392b;
+    background-color: #009c00;
 }

@@ -40,7 +40,7 @@ function AddFruits() {
       } else {
         setSuccess("Fruit added successfully!");
         setError(null);
-        setFormData(initialFormData); // Clear the form data
+        setFormData(initialFormData);
       }
     } catch (error) {
       console.error("Error submitting form:", error);

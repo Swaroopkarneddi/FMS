@@ -64,7 +64,7 @@ const FruitCard = ({ fruit, onDelete }) => {
         <strong>Warehouse Number:</strong> {warehouseNumber}
       </p>
       <button className="delete-button" onClick={handleDelete}>
-        Delete
+        Export
       </button>
     </div>
   );

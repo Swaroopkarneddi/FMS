@@ -16,6 +16,16 @@ function SalesAnalysis() {
     datasets: [],
   });
 
+  const [salesDataFruitsProfiit, setSalesDataFruitsProfiit] = useState({
+    labels: [],
+    datasets: [],
+  });
+
+  const [salesDataFruitsQuantity, setSalesDataFruitsQuantity] = useState({
+    labels: [],
+    datasets: [],
+  });
+
   const fetchData = async () => {
     try {
       // Fetch warehouse data
@@ -74,6 +84,40 @@ function SalesAnalysis() {
           },
         ],
       });
+
+      // Fetch aggregated sales data
+      const salesResponse = await axios.get(
+        "http://localhost:8000/getAggregatedSalesData"
+      );
+      const salesData = salesResponse.data;
+
+      const salesLabels = salesData.map((sale) => sale.fruitName);
+      const salesProfits = salesData.map((sale) => sale.totalProfit);
+      const salesQuantities = salesData.map((sale) => sale.totalQuantity);
+
+      setSalesDataFruitsProfiit({
+        labels: salesLabels,
+        datasets: [
+          {
+            label: "Total Profit in Rupees ₹",
+            data: salesProfits,
+            borderColor: "blue",
+          },
+        ],
+      });
+
+      setSalesDataFruitsQuantity({
+        labels: salesLabels,
+        datasets: [
+          {
+            label: "Total Quantity in KG",
+            data: salesQuantities,
+            borderColor: "orange",
+          },
+        ],
+      });
+
+      // Assuming weekly sales data is part of the aggregated sales data
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -86,8 +130,7 @@ function SalesAnalysis() {
   const handleRefresh = () => {
     fetchData();
   };
-
-  const SalesLinedata = {
+  const SalesLinedataweakly = {
     labels: [
       "Monday",
       "Tuesday",
@@ -112,24 +155,32 @@ function SalesAnalysis() {
   };
 
   return (
-    <div className="salesanalys">
+    <>
       <button onClick={handleRefresh} className="refresh-button">
         Refresh Data
       </button>
-      <div className="bgraph2">
-        <BarGraph data={fruitData} />
+      <div className="salesanalys">
+        <div className="bgraph2">
+          <BarGraph data={fruitData} />
+        </div>
+        <br />
+        <div className="bgraph2">
+          <BarGraph data={wareHouseData} />
+        </div>
+        <div className="bgraph2">
+          <LineGraph data={salesDataFruitsProfiit} />
+        </div>
+        <div className="bgraph2">
+          <LineGraph data={salesDataFruitsQuantity} />
+        </div>
+        <div className="bgraph2">
+          <LineGraph data={SalesLinedataweakly} />
+        </div>
+        {/* <div className="bgraph2">
+          <PieChart />
+        </div> */}
       </div>
-      <br />
-      <div className="bgraph2">
-        <BarGraph data={wareHouseData} />
-      </div>
-      <div className="bgraph2">
-        <LineGraph data={SalesLinedata} />
-      </div>
-      {/* <div className="bgraph2">
-        <PieChart />
-      </div> */}
-    </div>
+    </>
   );
 }
 

@@ -299,6 +299,41 @@ const getAllSales = async (req, res) => {
   }
 };
 
+const getAggregatedSalesData = async (req, res) => {
+  try {
+    // Aggregate sales data by summing quantities and calculating total profit for each fruit name
+    const aggregatedSales = await Sales.aggregate([
+      {
+        $group: {
+          _id: "$SoldfruitName",
+          totalQuantity: { $sum: "$quantity" },
+          totalProfit: {
+            $sum: {
+              $multiply: [{ $subtract: ["$MRP", "$price"] }, "$quantity"],
+            },
+          },
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          fruitName: "$_id",
+          totalQuantity: 1,
+          totalProfit: 1,
+        },
+      },
+    ]);
+
+    // Return the aggregated sales data
+    return res.status(200).json(aggregatedSales);
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({
+      error: "An error occurred while retrieving aggregated sales data",
+    });
+  }
+};
+
 module.exports = {
   test,
   createFruit,
@@ -308,4 +343,5 @@ module.exports = {
   getAllFruits,
   deleteFruit,
   getAllSales,
+  getAggregatedSalesData,
 };
